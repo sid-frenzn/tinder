@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Aesthetic Swipe Songs</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: #111;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: white;
+    }
+
+    .deck {
+      position: relative;
+      width: 320px;
+      height: 480px;
+    }
+
+    .card {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 18px;
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+      cursor: grab;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 20px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .info {
+      background: rgba(0,0,0,0.55);
+      border-radius: 14px;
+      padding: 12px;
+      backdrop-filter: blur(6px);
+    }
+    .info h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    .info p {
+      margin: 4px 0 0;
+      font-size: 14px;
+      opacity: 0.85;
+    }
+
+    .buttons {
+      position: absolute;
+      bottom: -70px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 30px;
+    }
+    .btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: none;
+      font-size: 22px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+      transition: transform 0.2s;
+    }
+    .btn:hover { transform: scale(1.1); }
+    .btn.no { background: #ff6b81; color: white; }
+    .btn.yes { background: #70e1f5; color: #222; }
+  </style>
+</head>
+<body>
+  <div class="deck" id="deck"></div>
+
+  <div class="buttons">
+    <button class="btn no" id="noBtn">✖</button>
+    <button class="btn yes" id="yesBtn">❤</button>
+  </div>
+
+  <script>
+    const SONGS = [
+      {
+        title: "Night Changes",
+        artist: "One Direction",
+        bg: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=800&q=80",
+        url: "https://youtu.be/syFZfO_wfMQ"
+      },
+      {
+        title: "Until I Found You",
+        artist: "Stephen Sanchez",
+        bg: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
+        url: "https://youtu.be/GxldQ9eX2wo"
+      },
+      {
+        title: "Kesariya",
+        artist: "Arijit Singh",
+        bg: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80",
+        url: "https://youtu.be/1gLRXJ2e6Vs"
+      },
+      {
+        title: "Love Story",
+        artist: "Taylor Swift",
+        bg: "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=800&q=80",
+        url: "https://youtu.be/8xg3vE8Ie_E"
+      }
+    ];
+
+    const deck = document.getElementById("deck");
+    let index = 0;
+
+    function createCard(song) {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.style.backgroundImage = url('${song.bg}');
+
+      const info = document.createElement("div");
+      info.className = "info";
+      info.innerHTML = <h2>${song.title}</h2><p>${song.artist}</p>;
+      card.appendChild(info);
+
+      // Click opens song
+      card.addEventListener("click", () => window.open(song.url, "_blank"));
+
+      deck.appendChild(card);
+    }
+
+    function showNext() {
+      if (index < SONGS.length) {
+        createCard(SONGS[index]);
+        index++;
+      } else {
+        deck.innerHTML = "<p style='color:white;text-align:center;'>✨ No more songs ✨</p>";
+      }
+    }
+
+    // Swipe simulation with buttons
+    document.getElementById("noBtn").onclick = () => {
+      const card = deck.lastChild;
+      if (!card) return;
+      card.style.transform = "translateX(-400px) rotate(-20deg)";
+      card.style.opacity = 0;
+      setTimeout(() => { card.remove(); showNext(); }, 300);
+    };
+
+    document.getElementById("yesBtn").onclick = () => {
+      const card = deck.lastChild;
+      if (!card) return;
+      card.style.transform = "translateX(400px) rotate(20deg)";
+      card.style.opacity = 0;
+      setTimeout(() => { card.remove(); showNext(); }, 300);
+    };
+
+    // Init with first 2
+    showNext();
+    showNext();
+  </script>
+</body>
+</html>
